@@ -6,6 +6,7 @@ const users = require('./routes/users');
 const cards = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -29,10 +30,9 @@ app.use(auth);
 app.use('/', users);
 app.use('/', cards);
 
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-});
+app.all('*', (req, res, next) => next(new NotFoundError('Запрашиваемый ресурс не найден.')));
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { status = 500, message } = err;
