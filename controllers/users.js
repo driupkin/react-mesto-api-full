@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 const BadRequestError = require('../errors/BadRequestError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const SALT_ROUNDS = 10;
 
@@ -29,7 +30,9 @@ module.exports.getUserId = (req, res, next) => {
 // POST /users
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email,
+    name = 'someName',
+    about = 'something about',
+    avatar = 'https://img2.pngio.com/smile-icon-transparent-png-clipart-free-download-yawd-smiling-face-png-2400_2400.png', email,
   } = req.body;
   User.findOne({ email })
     .then((user) => {
@@ -69,19 +72,19 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch(next);
 };
 // POST /login
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new UnauthorizedError('Неправильные почта или пароль');
       }
       // проверяем пароль
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            throw new UnauthorizedError('Неправильные почта или пароль');
           }
           return user; // если всё верно, возвращаем найденного usera
         });
@@ -92,9 +95,5 @@ module.exports.login = (req, res) => {
       // вернём токен
       res.send({ token });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+    .catch(next);
 };
