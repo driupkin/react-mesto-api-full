@@ -10,7 +10,7 @@ const SALT_ROUNDS = 10;
 
 // GET /users
 module.exports.getUsers = (req, res, next) => {
-  User.find({})
+  User.findOne({ _id: req.user })
     .then((users) => {
       res.status(200).send(users);
     })

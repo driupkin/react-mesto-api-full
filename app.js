@@ -3,6 +3,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+
+const cors = require('cors');
+
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
@@ -14,6 +17,11 @@ const { validationCreateUser } = require('./middlewares/requestValidation');
 const app = express();
 const { PORT = 3000 } = process.env;
 
+// app.use((req, res, next) => {
+//   res.header({ 'Access-Control-Allow-Origin': '*' });
+//   next();
+// });
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,6 +31,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb',
     useUnifiedTopology: true,
     useFindAndModify: false,
   });
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(requestLogger);
