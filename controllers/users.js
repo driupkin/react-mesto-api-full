@@ -58,14 +58,13 @@ module.exports.createUser = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, req.body, { new: true })
     .then((me) => {
-      console.log(me);
       res.status(200).send(me);
     })
     .catch(next);
 };
 // PATCH /users/me/avatar
 module.exports.updateAvatar = (req, res, next) => {
-  User.findOneAndUpdate({ _id: req.user._id }, req.body, { new: true })
+  User.findByIdAndUpdate(req.user._id, req.body, { new: true })
     .then((avatar) => {
       res.status(200).send(avatar);
     })

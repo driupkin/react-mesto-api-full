@@ -8,20 +8,20 @@ const validationCreateUser = celebrate({
 });
 const validationUpdateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().alphanum().min(3).max(30)
+    name: Joi.string().min(3).max(30)
       .required(),
     about: Joi.string().required().min(2).max(30),
   }),
 });
 const validationUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.link(),
+    avatar: Joi.string().uri(),
   }),
 });
 const validationCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.link(),
+    link: Joi.string().uri(),
   }),
 });
 
