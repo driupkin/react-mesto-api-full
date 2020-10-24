@@ -6,11 +6,16 @@ const {
   updateUser,
   updateAvatar,
 } = require('../controllers/users');
-const { validationUpdateUser, validationUpdateAvatar } = require('../middlewares/requestValidation');
+const {
+  validationUpdateUser,
+  validationUpdateAvatar,
+  validationCreateUser,
+  validationGetUser,
+} = require('../middlewares/requestValidation');
 
-router.get('/users/me', getUsers);
+router.get('/users/me', validationGetUser, getUsers);
 router.get('/users/:id', getUserId);
-router.post('/users', createUser);
+router.post('/users', validationCreateUser, createUser);
 router.patch('/users/me', validationUpdateUser, updateUser);
 router.patch('/users/me/avatar', validationUpdateAvatar, updateAvatar);
 

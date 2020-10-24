@@ -18,7 +18,7 @@ module.exports.createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError(`${err.message}`));
       }
-      return next;
+      return next(err);
     });
 };
 // DELETE /cards/:cardId
@@ -32,7 +32,6 @@ module.exports.deleteCard = (req, res, next) => {
       if (req.user._id === String(card.owner._id)) {
         Card.findByIdAndRemove(req.params.cardId)
           .then((cards) => res.status(200).send(cards));
-        return Promise.reject;
       }
       throw new ForbiddenError('Нельзя удалять чужие карточки!');
     })

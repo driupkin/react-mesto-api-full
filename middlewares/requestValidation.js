@@ -8,7 +8,7 @@ const validationCreateUser = celebrate({
 });
 const validationUpdateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(3).max(30)
+    name: Joi.string().min(2).max(30)
       .required(),
     about: Joi.string().required().min(2).max(30),
   }),
@@ -24,10 +24,22 @@ const validationCreateCard = celebrate({
     link: Joi.string().uri(),
   }),
 });
+const validationDelLickeDislikeCard = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().hex().length(24),
+  }),
+});
+const validationGetUser = celebrate({
+  headers: Joi.object().keys({
+    Authorization: Joi.string().token(),
+  }),
+});
 
 module.exports = {
   validationCreateUser,
   validationUpdateUser,
   validationUpdateAvatar,
   validationCreateCard,
+  validationDelLickeDislikeCard,
+  validationGetUser,
 };
