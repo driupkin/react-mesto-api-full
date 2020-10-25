@@ -36,7 +36,7 @@ const validationDelLickeDislikeCard = celebrate({
 const validationGetUser = celebrate({
   headers: Joi.object().keys({
     Authorization: Joi.string().token(),
-  }),
+  }).unknown(true),
 });
 const validationGetUserId = celebrate({
   params: Joi.object().keys({
