@@ -44,7 +44,7 @@ app.use(auth);
 app.use('/', users);
 app.use('/', cards);
 
-app.all('*', (req, res, next) => next(new NotFoundError('Запрашиваемый ресурс не найден.')));
+//app.all('*', (req, res, next) => next(new NotFoundError('Запрашиваемый ресурс не найден.')));
 
 app.use(errorLogger);
 
