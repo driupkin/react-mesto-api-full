@@ -6,15 +6,33 @@ const ConflictError = require('../errors/ConflictError');
 const BadRequestError = require('../errors/BadRequestError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
+const { JWT_SECRET, NODE_ENV } = process.env;
 const SALT_ROUNDS = 10;
 
-// GET /users
 module.exports.getUsers = (req, res, next) => {
+  User.find()
+    .then((users) => {
+      res.status(200).send(users);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError(`${err.message}`));
+      }
+      return next(err);
+    });
+};
+// GET /users/me
+module.exports.getUser = (req, res, next) => {
   User.findOne({ _id: req.user })
     .then((users) => {
       res.status(200).send(users);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError(`${err.message}`));
+      }
+      return next(err);
+    });
 };
 // GET /users/:userId
 module.exports.getUserId = (req, res, next) => {
@@ -25,7 +43,12 @@ module.exports.getUserId = (req, res, next) => {
       }
       res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError(`${err.message}`));
+      }
+      return next(err);
+    });
 };
 // POST /users
 module.exports.createUser = (req, res, next) => {
@@ -44,6 +67,7 @@ module.exports.createUser = (req, res, next) => {
           name, about, avatar, email, password: hash,
         }))
         .then((data) => {
+          data.password = '';
           res.status(201).send(data);
         });
     })
@@ -56,19 +80,31 @@ module.exports.createUser = (req, res, next) => {
 };
 // PATCH /users/me
 module.exports.updateUser = (req, res, next) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { new: true })
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
     .then((me) => {
       res.status(200).send(me);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError(`${err.message}`));
+      }
+      return next(err);
+    });
 };
 // PATCH /users/me/avatar
 module.exports.updateAvatar = (req, res, next) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { new: true })
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
     .then((avatar) => {
       res.status(200).send(avatar);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError(`${err.message}`));
+      }
+      return next(err);
+    });
 };
 // POST /login
 module.exports.login = (req, res, next) => {
@@ -89,8 +125,12 @@ module.exports.login = (req, res, next) => {
         });
     })
     .then((user) => {
-      // создадим токен
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      // создадим токен || значение по умолчанию
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+        { expiresIn: '7d' }
+      );
       // вернём токен
       res.send({ token });
     })

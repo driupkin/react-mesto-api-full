@@ -3,7 +3,11 @@ const { celebrate, Joi } = require('celebrate');
 const validationCreateUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+    password:
+      Joi.string()
+        .required()
+        .min(8)
+        .pattern(new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])')),
   }).unknown(true),
 });
 const validationUpdateUser = celebrate({
@@ -15,13 +19,13 @@ const validationUpdateUser = celebrate({
 });
 const validationUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().pattern(new RegExp('https?:\/\/.*\.(?:png|jpg|jpeg)')),
   }),
 });
 const validationCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().uri(),
+    link: Joi.string().pattern(new RegExp('https?:\/\/.*\.(?:png|jpg|jpeg)')),
   }),
 });
 const validationDelLickeDislikeCard = celebrate({
@@ -34,6 +38,11 @@ const validationGetUser = celebrate({
     Authorization: Joi.string().token(),
   }),
 });
+const validationGetUserId = celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().hex().length(24),
+  }),
+});
 
 module.exports = {
   validationCreateUser,
@@ -42,4 +51,5 @@ module.exports = {
   validationCreateCard,
   validationDelLickeDislikeCard,
   validationGetUser,
+  validationGetUserId,
 };

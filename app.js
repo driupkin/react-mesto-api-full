@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -16,10 +17,6 @@ const { validationCreateUser } = require('./middlewares/requestValidation');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-// app.use((req, res, next) => {
-//   res.header({ 'Access-Control-Allow-Origin': '*' });
-//   next();
-// });
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

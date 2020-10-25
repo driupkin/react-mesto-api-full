@@ -1,4 +1,5 @@
 const validator = require('validator');
+const isImageURL = require('image-url-validator');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -8,7 +9,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (email) => validator.isEmail(email),
-      message: 'не правильно введен адрес электронной почты!',
+      message: 'неправильно введен адрес электронной почты!',
     },
   },
   password: {
@@ -33,11 +34,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (url) => {
-        const regExp = /https?:\/\/\S+$/i;
-        return regExp.test(url);
-      },
-      message: 'не правильно введен URL!',
+      validator: (url) => isImageURL(url),
+      message: 'неправильно введен URL!',
     },
   },
 });
