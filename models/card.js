@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const isImageURL = require('image-url-validator');
+const { default: validator } = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -12,17 +12,17 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (url) => isImageURL(url),
+      validator: (url) => validator.isURL(url),
       message: 'неправильно введен URL!',
     },
   },
   owner: {
-    type: Object,
+    type: mongoose.Types.ObjectId,
     ref: 'user',
     required: true,
   },
   likes: {
-    type: [Object],
+    type: [mongoose.Types.ObjectId],
     default: [],
   },
   createdAt: {

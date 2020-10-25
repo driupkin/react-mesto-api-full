@@ -19,13 +19,13 @@ const validationUpdateUser = celebrate({
 });
 const validationUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(new RegExp('https?:\/\/.*\.(?:png|jpg|jpeg)')),
+    avatar: Joi.string().pattern(new RegExp('https?://.*.(?:png|jpg|jpeg)')),
   }),
 });
 const validationCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().pattern(new RegExp('https?:\/\/.*\.(?:png|jpg|jpeg)')),
+    link: Joi.string().pattern(new RegExp('https?://.*.(?:png|jpg|jpeg)')),
   }),
 });
 const validationDelLickeDislikeCard = celebrate({

@@ -24,14 +24,14 @@ module.exports.createCard = (req, res, next) => {
 // DELETE /cards/:cardId
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .populate('owner')
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с таким id не найдена.');
       }
       if (req.user._id === String(card.owner._id)) {
         Card.findByIdAndRemove(req.params.cardId)
-          .then((cards) => res.status(200).send(cards));
+          .then(() => res.status(200).send({ message: 'Карточка удалена.' }));
+        return Promise;
       }
       throw new ForbiddenError('Нельзя удалять чужие карточки!');
     })

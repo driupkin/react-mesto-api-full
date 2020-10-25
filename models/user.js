@@ -1,5 +1,4 @@
 const validator = require('validator');
-const isImageURL = require('image-url-validator');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -34,7 +33,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (url) => isImageURL(url),
+      validator: (url) => validator.isURL(url),
       message: 'неправильно введен URL!',
     },
   },

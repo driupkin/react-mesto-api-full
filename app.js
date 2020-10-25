@@ -50,7 +50,6 @@ app.use(errorLogger);
 
 app.use(errors());
 
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { status = 500, message } = err;
@@ -60,9 +59,10 @@ app.use((err, req, res, next) => {
     .send({
       // проверяем статус и выставляем сообщение в зависимости от него
       message: status === 500
-        ? 'На сервере произошла ошибка'
+        ? `На сервере произошла ошибка: ${err.message}`
         : message,
     });
+  return next();
 });
 
 app.listen(PORT, () => {

@@ -67,7 +67,8 @@ module.exports.createUser = (req, res, next) => {
           name, about, avatar, email, password: hash,
         }))
         .then((data) => {
-          data.password = '';
+          // eslint-disable-next-line no-param-reassign
+          delete data.password;
           res.status(201).send(data);
         });
     })
@@ -96,8 +97,8 @@ module.exports.updateUser = (req, res, next) => {
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
-    .then((avatar) => {
-      res.status(200).send(avatar);
+    .then((ava) => {
+      res.status(200).send(ava);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -129,7 +130,7 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
-        { expiresIn: '7d' }
+        { expiresIn: '7d' },
       );
       // вернём токен
       res.send({ token });
