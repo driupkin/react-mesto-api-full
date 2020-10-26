@@ -4,8 +4,6 @@
 
 Ссылка на репозиторий: [https://github.com/driupkin/react-mesto-auth] 
 
-Сайт работает локально вроде как надо, на сервере почему-то только после авторизации (получения токена) и обновления страницы, разбираюсь...  
-
 Ссылка на сайт: [https://dri.students.nomoreparties.space] 
 
 Ссылка на бекенд-сервис: [https://api.dri.students.nomoreparties.space]
