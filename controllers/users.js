@@ -68,7 +68,7 @@ module.exports.createUser = (req, res, next) => {
         }))
         .then((data) => {
           // eslint-disable-next-line no-param-reassign
-          delete data.password;
+          data.password = null;
           res.status(201).send(data);
         });
     })
