@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 
 const validationCreateUser = celebrate({
   body: Joi.object().keys({
@@ -19,13 +20,23 @@ const validationUpdateUser = celebrate({
 });
 const validationUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(new RegExp('https?://.*.(?:png|jpg|jpeg)')),
+    avatar: Joi.string().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('неправильно введен URL!');
+    }),
   }),
 });
 const validationCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().pattern(new RegExp('https?://.*.(?:png|jpg|jpeg)')),
+    link: Joi.string().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('неправильно введен URL!');
+    }),
   }),
 });
 const validationDelLickeDislikeCard = celebrate({
