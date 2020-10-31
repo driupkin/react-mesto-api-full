@@ -110,7 +110,6 @@ module.exports.updateAvatar = (req, res, next) => {
 // POST /login
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {

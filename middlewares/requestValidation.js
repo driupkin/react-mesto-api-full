@@ -3,12 +3,16 @@ const validator = require('validator');
 
 const validationCreateUser = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string()
+      .required()
+      .email()
+      .message('Неправильно введен адрес почты!'),
     password:
       Joi.string()
         .required()
         .min(8)
-        .pattern(new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])')),
+        .pattern(new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])'))
+        .message('Пароль не прошел проверку!'),
   }).unknown(true),
 });
 const validationUpdateUser = celebrate({
