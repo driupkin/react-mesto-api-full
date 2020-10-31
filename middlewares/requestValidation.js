@@ -12,7 +12,7 @@ const validationCreateUser = celebrate({
         .required()
         .min(8)
         .pattern(new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])'))
-        .message('Пароль не прошел проверку!'),
+        .message('Пароль не удовлетворяет требованиям безопасности!'),
   }).unknown(true),
 });
 const validationUpdateUser = celebrate({
